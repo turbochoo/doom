@@ -77,6 +77,10 @@
       (intern (elt (split-string command) 1))))
     (- (error command))))
 
+;; asdf-vm
+(require 'asdf-vm)
+(asdf-vm-init)
+
 ;; Whenever you reconfigure a package, make sure to wrap your config in an
 ;; `after!' block, otherwise Doom's defaults may override your settings. E.g.
 ;;
