@@ -6,8 +6,8 @@
 
 ;; Some functionality uses this to identify you, e.g. GPG configuration, email
 ;; clients, file templates and snippets. It is optional.
-(setq user-full-name "turbo choo"
-      user-mail-address "turbochoo@qq.com")
+(setq user-full-name "Turbo Choo"
+       user-mail-address "turbochoo@qq.com")
 
 ;; Doom exposes five (optional) variables for controlling fonts in Doom:
 ;;
@@ -21,26 +21,20 @@
 ;; See 'C-h v doom-font' for documentation and more examples of what they
 ;; accept. For example:
 ;;
-(setq doom-font (font-spec :family "FiraCode Nerd Font" :size 18)
-      doom-variable-pitch-font (font-spec :family "MesloLGS NF" :size 18)
-      doom-big-font (font-spec :family "MesloLGS NF" :size 18))
 
-;; Set font for chinese characters
-;; Font should be twice the width of asci chars so that org tables align
-;; This will break if run in terminal mode, so use conditional to only run for GUI.
-(if (display-graphic-p)
-    (dolist (charset '(kana han cjk-misc bopomofo))
-      (set-fontset-font (frame-parameter nil 'font)
-                        charset (font-spec :family "WenQuanYi Micro Hei Mono" :size 18))))
+(setq doom-font (font-spec :family "FiraCode Nerd Font" :size 16)
+      doom-variable-pitch-font (font-spec :family "Fira Sans" :size 16))
 
-;; switch  english to chinese C-\
-(use-package rime
-  :custom
-  (default-input-method "rime"))
+(setq doom-unicode-font (font-spec :family "Noto Sans CJK"))
 
-(setq package-archives '(("gnu"   . "http://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/")
-                         ("org-cn". "http://mirrors.tuna.tsinghua.edu.cn/elpa/org/")
-                         ("melpa" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/")))
+(setq nerd-icons-font-names '("SymbolsNerdFontMono-Regular.ttf"))
+
+;;(defun init-cjk-fonts()
+;;  (dolist (charset '(kana han cjk-misc bopomofo))
+;;    (set-fontset-font (frame-parameter nil 'font)
+;;      charset (font-spec :family "Noto Sans Mono CJK SC" :size 15))))
+;;(add-hook 'doom-init-ui-hook 'init-cjk-fonts)
+
 ;;
 ;; If you or Emacs can't find your font, use 'M-x describe-font' to look them
 ;; up, `M-x eval-region' to execute elisp code, and 'M-x doom/reload-font' to
@@ -50,9 +44,8 @@
 ;; There are two ways to load a theme. Both assume the theme is installed and
 ;; available. You can either set `doom-theme' or manually load a theme with the
 ;; `load-theme' function. This is the default:
-
-(setq doom-theme 'doom-one)
-;;(setq doom-theme 'spacemacs-light)
+;;(setq doom-theme 'doom-one)
+(setq doom-theme 'spacemacs-light)
 
 ;; This determines the style of line numbers in effect. If set to `nil', line
 ;; numbers are disabled. For relative line numbers, set this to `relative'.
@@ -60,27 +53,21 @@
 
 ;; If you use `org' and don't want your org files in the default location below,
 ;; change `org-directory'. It must be set before org loads!
-(setq org-directory "~/Documents/org/")
+(setq org-directory "~/Documents/orgnote/")
 
-;; mixed fonts in a buffer  mix source and prose blocks in the same document
-(add-hook! 'org-mode-hook #'mixed-pitch-mode)
-(add-hook! 'org-mode-hook #'solaire-mode)
-(setq mixed-pitch-variable-pitch-cursor nil)
+(after! lsp-mode
+  (setq  lsp-go-use-gofumpt t)
+)
 
-;; https://whhone.com/posts/emacs-i3-integration/
-;; emacs --daemon
-(require 'windmove)
-(defun my/wm-integration (command)
-  (pcase command
-    ((rx bos "focus")
-     (windmove-do-window-select
-      (intern (elt (split-string command) 1))))
-    (- (error command))))
-
-;; asdf-vm
-(require 'asdf-vm)
-(asdf-vm-init)
-
+(after! lsp-mode
+  (setq  lsp-go-analyses '((fieldalignment . t)
+                           (nilness . t)
+                           (shadow . t)
+                           (unusedparams . t)
+                           (unusedwrite . t)
+                           (useany . t)
+                           (unusedvariable . t)))
+)
 ;; Whenever you reconfigure a package, make sure to wrap your config in an
 ;; `after!' block, otherwise Doom's defaults may override your settings. E.g.
 ;;
